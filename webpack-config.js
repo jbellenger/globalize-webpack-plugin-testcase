@@ -26,7 +26,6 @@ const mkConfig = (label, minChunks) => ({
 	},
 	plugins: [
     new HtmlWebpackPlugin({
-      production: true,
       template: './index-template.html'
     }),
 		new GlobalizePlugin({
@@ -37,12 +36,11 @@ const mkConfig = (label, minChunks) => ({
 			output: 'i18n/[locale].[chunkhash].js'
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
-      name: [ 'vendor', 'manifest' ],
+      name: 'vendor',
       minChunks: Infinity
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      async: 'shared',
-      children: true,
+      async: true,
       minChunks: minChunks
     })
   ]
