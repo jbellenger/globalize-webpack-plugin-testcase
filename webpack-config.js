@@ -35,8 +35,9 @@ const mkConfig = (label, minChunks) => ({
 			messages: 'messages/[locale].json',
 			output: 'i18n/[locale].[chunkhash].js'
 		}),
+    new webpack.NamedModulesPlugin(),
 		new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      name: ['vendor', 'manifest'],
       minChunks: Infinity
     }),
     new webpack.optimize.CommonsChunkPlugin({
