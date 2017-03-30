@@ -5,9 +5,9 @@ const path = require('path');
 
 const supportedLocales = [ 'en', 'zh', 'es' ];
 
-const mkConfig = (label, ...extraPlugins) => ({
+const mkConfig = (label, minChunks) => ({
 	entry: {
-		main: './app/index.js',
+		main: './app.js',
 		vendor: [
 			'globalize',
 			'globalize/dist/globalize-runtime/number',
@@ -21,15 +21,10 @@ const mkConfig = (label, ...extraPlugins) => ({
 	},
 	output: {
 		path: path.resolve(`./dist/${label}`),
-		publicPath: '',
 		chunkFilename: '[name].[chunkhash:16].js',
 		filename: '[name].[chunkhash:16].js'
 	},
 	plugins: [
-    new webpack.LoaderOptionsPlugin({
-      debug: false,
-      minimize: true
-    }),
     new HtmlWebpackPlugin({
       production: true,
       template: './index-template.html'
@@ -37,7 +32,7 @@ const mkConfig = (label, ...extraPlugins) => ({
 		new GlobalizePlugin({
 			production: true,
 			developmentLocale: 'en',
-			supportedLocales,
+			supportedLocales: supportedLocales,
 			messages: 'messages/[locale].json',
 			output: 'i18n/[locale].[chunkhash].js'
 		}),
@@ -45,23 +40,17 @@ const mkConfig = (label, ...extraPlugins) => ({
       name: [ 'vendor', 'manifest' ],
       minChunks: Infinity
     }),
-    ...extraPlugins
+    new webpack.optimize.CommonsChunkPlugin({
+      async: 'shared',
+      children: true,
+      minChunks: minChunks
+    })
   ]
 });
 
 module.exports = [
   // CommonsChunk can be used safely as long as minChunks is greater
   // than the number of i18n chunks
-  mkConfig('good-CommonsChunk', new webpack.optimize.CommonsChunkPlugin({
-    async: 'shared',
-    children: true,
-    minChunks: supportedLocales.length + 1,
-  })),
-
-  // CommonsChunk will break when minChunks <= supportedLocales
-  mkConfig('bad-CommonsChunk', new webpack.optimize.CommonsChunkPlugin({
-    async: 'shared',
-    children: true,
-    minChunks: supportedLocales.length
-  })),
+  mkConfig('good', supportedLocales.length + 1),
+  mkConfig('bad', supportedLocales.length)
 ];
