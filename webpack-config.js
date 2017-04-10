@@ -6,38 +6,38 @@ const path = require('path');
 const supportedLocales = [ 'en', 'zh', 'es' ];
 
 const mkConfig = (label, minChunks) => ({
-	entry: {
-		main: './app.js',
-		vendor: [
-			'globalize',
-			'globalize/dist/globalize-runtime/number',
-			'globalize/dist/globalize-runtime/currency',
-			'globalize/dist/globalize-runtime/date',
-			'globalize/dist/globalize-runtime/message',
-			'globalize/dist/globalize-runtime/plural',
-			'globalize/dist/globalize-runtime/relative-time',
-			'globalize/dist/globalize-runtime/unit'
-		]
-	},
-	output: {
-		path: path.resolve(`./dist/${label}`),
-		chunkFilename: '[name].[chunkhash:16].js',
-		filename: '[name].[chunkhash:16].js'
-	},
-	plugins: [
+  entry: {
+    main: './app.js',
+    vendor: [
+      'globalize',
+      'globalize/dist/globalize-runtime/number',
+      'globalize/dist/globalize-runtime/currency',
+      'globalize/dist/globalize-runtime/date',
+      'globalize/dist/globalize-runtime/message',
+      'globalize/dist/globalize-runtime/plural',
+      'globalize/dist/globalize-runtime/relative-time',
+      'globalize/dist/globalize-runtime/unit'
+    ]
+  },
+  output: {
+    path: path.resolve(`./dist/${label}`),
+    chunkFilename: '[name].[chunkhash:16].js',
+    filename: '[name].[chunkhash:16].js'
+  },
+  plugins: [
     new HtmlWebpackPlugin({
       template: './index-template.html'
     }),
-		new GlobalizePlugin({
-			production: true,
-			developmentLocale: 'en',
-			supportedLocales: supportedLocales,
-			messages: 'messages/[locale].json',
-			output: 'i18n/[locale].[chunkhash].js'
-		}),
-    new webpack.NamedModulesPlugin(),
-		new webpack.optimize.CommonsChunkPlugin({
-      name: ['vendor', 'manifest'],
+    new GlobalizePlugin({
+      production: true,
+      developmentLocale: 'en',
+      supportedLocales: supportedLocales,
+      messages: 'messages/[locale].json',
+      output: 'i18n/[locale].[chunkhash].js'
+    }),
+    // new webpack.NamedModulesPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: ['vendor'],
       minChunks: Infinity
     }),
     new webpack.optimize.CommonsChunkPlugin({

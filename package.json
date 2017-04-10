@@ -4,7 +4,7 @@
     "globalize": ">=1.2.0-a <2.0.0",
     "html-webpack-plugin": "^2.28.0",
     "globalize-webpack-plugin": "^0.3.10",
-    "webpack": "^2.2.0"
+    "webpack": "^2.3.3"
   },
   "scripts": {
     "start": "npm run build && open meta-index.html",
